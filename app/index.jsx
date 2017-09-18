@@ -1,6 +1,6 @@
 import React from 'react';
 import ReactDOM from 'react-dom';
-
+import request from 'superagent';
 import Recorder from '../lib/recorder';
 
 class RecorderBox extends React.Component {
@@ -32,6 +32,7 @@ class RecorderBox extends React.Component {
     this.startRecording = this.startRecording.bind(this);
     this.stopRecording = this.stopRecording.bind(this);
     this.createDownloadLink = this.createDownloadLink.bind(this);
+    this.sendWav = this.sendWav.bind(this);
   }
 
   startRecording() {
@@ -45,25 +46,37 @@ class RecorderBox extends React.Component {
     
     // create WAV download link using audio data blob
     this.createDownloadLink();
-    
     this.recorder.clear();
   }
 
   createDownloadLink() {
+    const self = this;
     this.recorder && this.recorder.exportWAV(function(blob) {
-      var url = URL.createObjectURL(blob);
-      var li = document.createElement('li');
-      var au = document.createElement('audio');
-      var hf = document.createElement('a');
-      
-      au.controls = true;
-      au.src = url;
-      hf.href = url;
-      hf.download = new Date().toISOString() + '.wav';
-      hf.innerHTML = hf.download;
-      li.appendChild(au);
-      li.appendChild(hf);
-      recordingslist.appendChild(li);
+      var blobToBase64 = function(blob, cb) {
+        var reader = new FileReader();
+        reader.onload = function() {
+          var dataUrl = reader.result;
+          var base64 = dataUrl.split(',')[1];
+          cb(base64);
+        };
+        reader.readAsDataURL(blob);
+      };
+
+      blobToBase64(blob, function(base64) { // encode
+        self.sendWav(base64);
+      });
+    });
+  }
+
+  sendWav(base64) {
+    request
+    .post('http://localhost:3000/listen')
+    .send({ sound: base64 })
+    .then((result) => {
+      // process the result here
+    })
+    .catch((err) => {
+      throw err;
     });
   }
 
