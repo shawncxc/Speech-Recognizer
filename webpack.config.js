@@ -24,6 +24,7 @@ module.exports = {
       style: path.resolve(__dirname, 'app/style'),
       asset: path.resolve(__dirname, 'app/style/asset'),
       store: path.resolve(__dirname, 'app/redux'),
+      lib: path.resolve(__dirname, 'lib'),
       root: path.resolve(__dirname),
     }
   },
