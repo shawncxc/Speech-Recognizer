@@ -1,6 +1,7 @@
 import React from 'react';
 import request from 'superagent';
 import Recorder from 'lib/recorder';
+import listenerStore from 'store/listener_store';
 
 export default class Listener extends React.Component {
   constructor() {
@@ -27,10 +28,23 @@ export default class Listener extends React.Component {
       }
     );
 
+    this.state = {
+      speech: ''
+    };
+
     this.startRecording = this.startRecording.bind(this);
     this.stopRecording = this.stopRecording.bind(this);
     this.exportWAV = this.exportWAV.bind(this);
     this.sendWav = this.sendWav.bind(this);
+    this.receiveSpeech = this.receiveSpeech.bind(this);
+    this.displaySpeech = this.displaySpeech.bind(this);
+  }
+
+  componentDidMount() {
+    const self = this;
+    listenerStore.subscribe(() => {
+      self.displaySpeech(listenerStore.getState().speech);
+    });
   }
 
   startRecording() {
@@ -59,22 +73,39 @@ export default class Listener extends React.Component {
   }
 
   sendWav(base64) {
+    const self = this;
+
+    listenerStore.dispatch({
+      type: 'LISTEN',
+      sound: base64
+    });
+    
     request
     .post('http://localhost:3000/listen')
     .send({ sound: base64 })
-    .then((result) => {
-      console.log(result);
-    })
+    .then(self.receiveSpeech)
     .catch((err) => {
       throw err;
     });
+  }
+
+  receiveSpeech(result) {
+    listenerStore.dispatch({
+      type: 'WRITE',
+      speech: result.text
+    });
+  }
+
+  displaySpeech(speech) {
+    this.setState({ speech: speech });
   }
 
   render() {
     return (
       <div>
         <button onClick={ this.startRecording }>record</button>
-        <button onClick={ this.stopRecording }>stop</button> 
+        <button onClick={ this.stopRecording }>stop</button>
+        <p>{ this.state.speech }</p>
       </div>
     );
   }

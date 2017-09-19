@@ -23,7 +23,7 @@ module.exports = {
       component: path.resolve(__dirname, 'app/component'),
       style: path.resolve(__dirname, 'app/style'),
       asset: path.resolve(__dirname, 'app/style/asset'),
-      store: path.resolve(__dirname, 'app/redux'),
+      store: path.resolve(__dirname, 'app/store'),
       lib: path.resolve(__dirname, 'lib'),
       root: path.resolve(__dirname),
     }
