@@ -38,6 +38,7 @@ export default class Listener extends React.Component {
     this.sendWav = this.sendWav.bind(this);
     this.receiveSpeech = this.receiveSpeech.bind(this);
     this.displaySpeech = this.displaySpeech.bind(this);
+    this.handlePress = this.handlePress.bind(this);
   }
 
   componentDidMount() {
@@ -100,11 +101,14 @@ export default class Listener extends React.Component {
     this.setState({ speech: speech });
   }
 
+  handlePress(event) {
+    console.log("===> ", event);
+  }
+
   render() {
     return (
       <div>
-        <button onClick={ this.startRecording }>record</button>
-        <button onClick={ this.stopRecording }>stop</button>
+        <button onMouseDown={ this.startRecording } onMouseUp={ this.stopRecording }>PRESS ME</button>
         <p>{ this.state.speech }</p>
       </div>
     );
