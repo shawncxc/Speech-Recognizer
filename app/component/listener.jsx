@@ -3,6 +3,10 @@ import request from 'superagent';
 import Recorder from 'lib/recorder';
 import listenerStore from 'store/listener_store';
 
+// UI component
+import RaisedButton from 'material-ui/RaisedButton';
+import Paper from 'material-ui/Paper';
+
 export default class Listener extends React.Component {
   constructor() {
     super();
@@ -38,7 +42,6 @@ export default class Listener extends React.Component {
     this.sendWav = this.sendWav.bind(this);
     this.receiveSpeech = this.receiveSpeech.bind(this);
     this.displaySpeech = this.displaySpeech.bind(this);
-    this.handlePress = this.handlePress.bind(this);
   }
 
   componentDidMount() {
@@ -101,16 +104,12 @@ export default class Listener extends React.Component {
     this.setState({ speech: speech });
   }
 
-  handlePress(event) {
-    console.log("===> ", event);
-  }
-
   render() {
     return (
-      <div>
-        <button onMouseDown={ this.startRecording } onMouseUp={ this.stopRecording }>PRESS ME</button>
-        <p>{ this.state.speech }</p>
-      </div>
+      <Paper style={{width: 500, height: 500}} zDepth={2}>
+        <RaisedButton style={{margin: 10}} label="TALK" onMouseDown={ this.startRecording } onMouseUp={ this.stopRecording } />
+        <p style={{margin: 10}}>{ this.state.speech }</p>
+      </Paper>
     );
   }
 }
