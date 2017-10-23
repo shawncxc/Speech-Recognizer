@@ -1,5 +1,3 @@
-import { createStore } from 'redux';
-
 const listenerReducer = (state = {}, action) => {
   switch(action.type) {
     case 'LISTEN':
@@ -17,4 +15,4 @@ const listenerReducer = (state = {}, action) => {
   }
 };
 
-export default createStore(listenerReducer);
+export default listenerReducer;

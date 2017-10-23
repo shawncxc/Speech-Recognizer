@@ -1,15 +1,17 @@
 import React from 'react';
 import request from 'superagent';
 import Recorder from 'lib/recorder';
-import listenerStore from 'store/listener_store';
+import { connect } from 'react-redux';
+import store from 'store/store';
 
 // UI component
+import 'style/listener.css';
 import RaisedButton from 'material-ui/RaisedButton';
 import Paper from 'material-ui/Paper';
 
 export default class Listener extends React.Component {
-  constructor() {
-    super();
+  constructor(props) {
+    super(props);
     var AudioContext = window.AudioContext || window.webkitAudioContext;
     this.audio_context = new AudioContext();
     this.recorder = null;
@@ -46,8 +48,8 @@ export default class Listener extends React.Component {
 
   componentDidMount() {
     const self = this;
-    listenerStore.subscribe(() => {
-      self.displaySpeech(listenerStore.getState().speech);
+    store.subscribe(() => {
+      self.displaySpeech(store.getState().listenerReducer.speech);
     });
   }
 
@@ -78,8 +80,7 @@ export default class Listener extends React.Component {
 
   sendWav(base64) {
     const self = this;
-
-    listenerStore.dispatch({
+    store.dispatch({
       type: 'LISTEN',
       sound: base64
     });
@@ -94,7 +95,7 @@ export default class Listener extends React.Component {
   }
 
   receiveSpeech(result) {
-    listenerStore.dispatch({
+    store.dispatch({
       type: 'WRITE',
       speech: result.text
     });
@@ -106,7 +107,7 @@ export default class Listener extends React.Component {
 
   render() {
     return (
-      <Paper style={{width: 500, height: 500}} zDepth={2}>
+      <Paper zDepth={2} className="listener-container">
         <RaisedButton style={{margin: 10}} label="TALK" onMouseDown={ this.startRecording } onMouseUp={ this.stopRecording } />
         <p style={{margin: 10}}>{ this.state.speech }</p>
       </Paper>

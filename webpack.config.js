@@ -23,6 +23,7 @@ module.exports = {
       component: path.resolve(__dirname, 'app/component'),
       style: path.resolve(__dirname, 'app/style'),
       asset: path.resolve(__dirname, 'app/style/asset'),
+      reducer: path.resolve(__dirname, 'app/reducer'),
       store: path.resolve(__dirname, 'app/store'),
       lib: path.resolve(__dirname, 'lib'),
       root: path.resolve(__dirname),
